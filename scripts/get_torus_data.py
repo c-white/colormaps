@@ -17,6 +17,7 @@ def main():
   read_dir = '/Users/cjwhite/codes/athena/vis/python'
   input_file = '/Users/cjwhite/research/athena_method/data/torus/s90_t00_high.prim.01000.athdf'
   output_file = '/Users/cjwhite/projects/colormaps/data/torus.npz'
+  spin = 0.9
 
   # Load data reader
   sys.path.insert(0, read_dir)
@@ -48,6 +49,7 @@ def main():
   data_out['xf'] = xf
   data_out['yf'] = yf
   data_out['rho'] = rho
+  data_out['spin'] = spin
 
   # Save data
   np.savez(output_file, **data_out)

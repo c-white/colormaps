@@ -4,11 +4,11 @@
 Script for making all plots.
 
 Datasets:
-  - complex function
+  - complex: complex-valued function on complex plane
+  - torus_rho: poloidal slice of density from GR torus
   - magnetized Kelvin-Helmholtz density
   - magnetized Kelvin-Helmholtz magnetization
-  - poloidal slice of density in GR torus
-  - equatorial slice of current density in GR torus
+  - equatorial slice of current density from GR torus
   - cosmic microwave background
 
 Colormaps:
@@ -36,7 +36,7 @@ def main(**kwargs):
 
   # Plotting parameters - layout
   fig_width = 3.35
-  aspects = {'torus_rho': 1.0}
+  aspects = {'complex': 2.0, 'torus_rho': 1.0}
   lmar_frac = 0.01
   rmar_frac = 0.01
   bmar_frac = 0.01
@@ -52,6 +52,9 @@ def main(**kwargs):
 
   # Read data
   data = {}
+  if 'complex' in kwargs['datasets']:
+    data_local = np.load('{0}/complex.npz'.format(data_dir))
+    data['complex'] = dict(data_local)
   if 'torus_rho' in kwargs['datasets']:
     data_local = np.load('{0}/torus.npz'.format(data_dir))
     data['torus'] = dict(data_local)
@@ -68,16 +71,25 @@ def main(**kwargs):
     ax = plt.subplot(1, 1, 1)
 
     # Plot data
+    if dataset == 'complex':
+      xf = data['complex']['xf']
+      yf = data['complex']['yf']
+      vals = np.angle(data['complex']['f'])
+      ax.pcolormesh(xf, yf, vals, vmin=-np.pi, vmax=np.pi)
     if dataset == 'torus_rho':
       xf = data['torus']['xf']
       yf = data['torus']['yf']
       vals = data['torus']['rho']
       ax.pcolormesh(xf, yf, vals, vmin=1.0e-5, vmax=1.0e0, norm=LogNorm())
-      r_hor = 1.0 + (1.0**2 - 0.9**2) ** 0.5
+      spin = data['torus']['spin']
+      r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
       black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')
       ax.add_artist(black_hole)
 
     # Adjust axes
+    if dataset == 'complex':
+      ax.set_xlim((-10.0, 10.0))
+      ax.set_ylim((-5.0, 5.0))
     if dataset == 'torus_rho':
       ax.set_xlim((-50.0, 50.0))
       ax.set_ylim((-50.0, 50.0))
@@ -104,7 +116,7 @@ def main(**kwargs):
 
 # Parser for list of datasets
 def dataset_list(string):
-  valid_datasets = ['torus_rho']
+  valid_datasets = ['complex', 'torus_rho']
   if string == 'all':
     return valid_datasets[:]
   selected_datasets = string.split(',')

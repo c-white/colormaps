@@ -1,4 +1,5 @@
 # Data files
+/data/complex.npz
 /data/torus.npz
 
 # Plot files
