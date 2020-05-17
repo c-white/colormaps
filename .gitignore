@@ -1,2 +1,5 @@
 # Data files
 /data/torus.npz
+
+# Plot files
+/plots/
