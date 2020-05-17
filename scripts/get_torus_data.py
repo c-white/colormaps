@@ -24,9 +24,7 @@ def main():
 
   # Read data
   data_coord = athena_read.athdf(input_file, quantities=[])
-  r = data_coord['x1v']
   rf = data_coord['x1f']
-  th = data_coord['x2v']
   thf = data_coord['x2f']
   nph = len(data_coord['x3v'])
   dph = 2.0 * np.pi / nph
@@ -38,13 +36,12 @@ def main():
   data_left = athena_read.athdf(input_file, quantities=('rho',), x3_min=ph_min, x3_max=ph_max)
 
   # Calculate grids
-  th_ext = np.concatenate((th, 2.0 * np.pi - th[::-1]))
-  thf_ext = np.concatenate((th, 2.0 * np.pi - thf[-1::-1]))
+  thf_ext = np.concatenate((thf, 2.0 * np.pi - thf[-2::-1]))
   xf = rf[None,:] * np.sin(thf_ext[:,None])
   yf = rf[None,:] * np.cos(thf_ext[:,None])
 
   # Assemble cell quantities
-  rho = np.vstack((data_right['rho'], data_left['rho'][::-1,:]))
+  rho = np.vstack((data_right['rho'][0,:,:], data_left['rho'][0,::-1,:]))
 
   # Assemble data
   data_out = {}
