@@ -13,6 +13,7 @@ Datasets:
 
 Colormaps:
   - viridis
+  - gray_uniform
 """
 
 # Python standard modules
@@ -26,6 +27,7 @@ from matplotlib.colors import LogNorm
 
 # Modules
 import numpy as np
+import custom_colormaps
 
 # Main function
 def main(**kwargs):
@@ -59,60 +61,57 @@ def main(**kwargs):
     data_local = np.load('{0}/torus.npz'.format(data_dir))
     data['torus'] = dict(data_local)
 
-  # Go through datasets
+  # Define colormaps
+  if 'gray_uniform' in kwargs['colormaps']:
+    custom_colormaps.gray_uniform()
+
+  # Go through datasets and colormaps
   for dataset in kwargs['datasets']:
-
-    # Calculate specific layout
-    panel_height = fig_width / aspects[dataset]
-    fig_height = bmar + panel_height + tmar
-
-    # Prepare figure
-    plt.figure(figsize=(fig_width,fig_height))
-    ax = plt.subplot(1, 1, 1)
-
-    # Plot data
-    if dataset == 'complex':
-      xf = data['complex']['xf']
-      yf = data['complex']['yf']
-      vals = np.angle(data['complex']['f'])
-      ax.pcolormesh(xf, yf, vals, vmin=-np.pi, vmax=np.pi)
-    if dataset == 'torus_rho':
-      xf = data['torus']['xf']
-      yf = data['torus']['yf']
-      vals = data['torus']['rho']
-      ax.pcolormesh(xf, yf, vals, vmin=1.0e-5, vmax=1.0e0, norm=LogNorm())
-      spin = data['torus']['spin']
-      r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
-      black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')
-      ax.add_artist(black_hole)
-
-    # Adjust axes
-    if dataset == 'complex':
-      ax.set_xlim((-10.0, 10.0))
-      ax.set_ylim((-5.0, 5.0))
-    if dataset == 'torus_rho':
-      ax.set_xlim((-50.0, 50.0))
-      ax.set_ylim((-50.0, 50.0))
-    ax.tick_params(left=False, labelleft=False, bottom=False, labelbottom=False)
-
-    # Adjust layout
-    width = panel_width / fig_width
-    height = panel_height / fig_height
-    x0 = lmar / fig_width
-    y0 = bmar / fig_height
-    ax.set_position((x0, y0, width, height))
-
-    # Go through colormaps
     for colormap in kwargs['colormaps']:
 
-      # Set colormap
-      plt.set_cmap(colormap)
+      # Calculate specific layout
+      panel_height = fig_width / aspects[dataset]
+      fig_height = bmar + panel_height + tmar
+
+      # Prepare figure
+      plt.figure(figsize=(fig_width,fig_height))
+      ax = plt.subplot(1, 1, 1)
+
+      # Plot data
+      if dataset == 'complex':
+        xf = data['complex']['xf']
+        yf = data['complex']['yf']
+        vals = np.angle(data['complex']['f'])
+        ax.pcolormesh(xf, yf, vals, vmin=-np.pi, vmax=np.pi, cmap=colormap)
+      if dataset == 'torus_rho':
+        xf = data['torus']['xf']
+        yf = data['torus']['yf']
+        vals = data['torus']['rho']
+        ax.pcolormesh(xf, yf, vals, vmin=1.0e-5, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
+        spin = data['torus']['spin']
+        r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
+        black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')
+        ax.add_artist(black_hole)
+
+      # Adjust axes
+      if dataset == 'complex':
+        ax.set_xlim((-10.0, 10.0))
+        ax.set_ylim((-5.0, 5.0))
+      if dataset == 'torus_rho':
+        ax.set_xlim((-50.0, 50.0))
+        ax.set_ylim((-50.0, 50.0))
+      ax.tick_params(left=False, labelleft=False, bottom=False, labelbottom=False)
+
+      # Adjust layout
+      width = panel_width / fig_width
+      height = panel_height / fig_height
+      x0 = lmar / fig_width
+      y0 = bmar / fig_height
+      ax.set_position((x0, y0, width, height))
 
       # Save figure
       plt.savefig('{0}/{1}.{2}.png'.format(plot_dir, dataset, colormap), dpi=dpi)
-
-    # Prepare for next dataset
-    plt.close()
+      plt.close()
 
 # Parser for list of datasets
 def dataset_list(string):
@@ -127,7 +126,7 @@ def dataset_list(string):
 
 # Parser for list of colormaps
 def colormap_list(string):
-  valid_colormaps = ['viridis']
+  valid_colormaps = ['viridis', 'gray_uniform']
   if string == 'all':
     return valid_colormaps[:]
   selected_colormaps = string.split(',')
