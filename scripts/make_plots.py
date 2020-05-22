@@ -64,6 +64,8 @@ def main(**kwargs):
   # Define colormaps
   if 'gray_uniform' in kwargs['colormaps']:
     custom_colormaps.gray_uniform()
+  if 'helix_uniform' in kwargs['colormaps']:
+    custom_colormaps.helix_uniform((10.0, 30.0, 230.0), (80.0, 50.0, 330.0), 0)
 
   # Go through datasets and colormaps
   for dataset in kwargs['datasets']:
@@ -126,7 +128,7 @@ def dataset_list(string):
 
 # Parser for list of colormaps
 def colormap_list(string):
-  valid_colormaps = ['viridis', 'gray_uniform']
+  valid_colormaps = ['viridis', 'gray_uniform', 'helix_uniform']
   if string == 'all':
     return valid_colormaps[:]
   selected_colormaps = string.split(',')
