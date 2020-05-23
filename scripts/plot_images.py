@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 """
-Script for making all plots.
+Script for plotting all images with all colormaps.
 
 Datasets:
   - complex: complex-valued function on complex plane
@@ -14,6 +14,7 @@ Datasets:
 Colormaps:
   - viridis
   - gray_uniform
+  - helix_uniform
 """
 
 # Python standard modules
