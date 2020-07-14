@@ -2,6 +2,7 @@
 /scripts/custom_colormaps.pyc
 
 # Data files
+/data/cmb.npz
 /data/complex.npz
 /data/torus.npz
 

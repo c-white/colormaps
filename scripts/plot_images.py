@@ -4,12 +4,12 @@
 Script for plotting all images with all colormaps.
 
 Datasets:
+  - cmb: cosmic microwave background temperature
   - complex: complex-valued function on complex plane
   - torus_rho: poloidal slice of density from GR torus
   - magnetized Kelvin-Helmholtz density
   - magnetized Kelvin-Helmholtz magnetization
   - equatorial slice of current density from GR torus
-  - cosmic microwave background
 
 Colormaps:
   - viridis
@@ -26,7 +26,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
-# Modules
+# Other modules
 import numpy as np
 import custom_colormaps
 
@@ -39,7 +39,7 @@ def main(**kwargs):
 
   # Plotting parameters - layout
   fig_width = 3.35
-  aspects = {'complex': 2.0, 'torus_rho': 1.0}
+  aspects = {'cmb': 2.0, 'complex': 2.0, 'torus_rho': 1.0}
   lmar_frac = 0.01
   rmar_frac = 0.01
   bmar_frac = 0.01
@@ -55,6 +55,9 @@ def main(**kwargs):
 
   # Read data
   data = {}
+  if 'cmb' in kwargs['datasets']:
+    data_local = np.load('{0}/cmb.npz'.format(data_dir))
+    data['cmb'] = dict(data_local)
   if 'complex' in kwargs['datasets']:
     data_local = np.load('{0}/complex.npz'.format(data_dir))
     data['complex'] = dict(data_local)
@@ -81,6 +84,11 @@ def main(**kwargs):
       ax = plt.subplot(1, 1, 1)
 
       # Plot data
+      if dataset == 'cmb':
+        xf = data['cmb']['xf']
+        yf = data['cmb']['yf']
+        vals = data['cmb']['temperature']
+        ax.pcolormesh(xf, yf, vals, vmin=-6.0e-4, vmax=6.0e-4, cmap=colormap)
       if dataset == 'complex':
         xf = data['complex']['xf']
         yf = data['complex']['yf']
@@ -97,13 +105,16 @@ def main(**kwargs):
         ax.add_artist(black_hole)
 
       # Adjust axes
+      if dataset == 'cmb':
+        ax.set_xlim((-2.0**1.5, 2.0**1.5))
+        ax.set_ylim((-2.0**0.5, 2.0**0.5))
       if dataset == 'complex':
         ax.set_xlim((-10.0, 10.0))
         ax.set_ylim((-5.0, 5.0))
       if dataset == 'torus_rho':
         ax.set_xlim((-50.0, 50.0))
         ax.set_ylim((-50.0, 50.0))
-      ax.tick_params(left=False, labelleft=False, bottom=False, labelbottom=False)
+      ax.axis('off')
 
       # Adjust layout
       width = panel_width / fig_width
@@ -118,7 +129,7 @@ def main(**kwargs):
 
 # Parser for list of datasets
 def dataset_list(string):
-  valid_datasets = ['complex', 'torus_rho']
+  valid_datasets = ['cmb', 'complex', 'torus_rho']
   if string == 'all':
     return valid_datasets[:]
   selected_datasets = string.split(',')
