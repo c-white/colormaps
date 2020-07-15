@@ -6,7 +6,7 @@ Script for plotting all colorbars.
 Colormaps:
   - viridis
   - gray_uniform
-  - helix_uniform
+  - cool_uniform
 """
 
 # Python plotting modules
@@ -27,7 +27,7 @@ def main():
   # Parameters
   data_dir = '/Users/cjwhite/projects/colormaps/data'
   plot_dir = '/Users/cjwhite/projects/colormaps/plots'
-  cmaps = ['viridis', 'gray_uniform', 'helix_uniform']
+  cmaps = ['viridis', 'gray_uniform', 'cool_uniform']
 
   # Plotting parameters - layout
   fig_width = 3.35
@@ -55,7 +55,7 @@ def main():
 
   # Define colormaps
   custom_colormaps.gray_uniform()
-  custom_colormaps.helix_uniform((10.0, 30.0, 230.0), (80.0, 50.0, 330.0), 0)
+  custom_colormaps.cool_uniform()
 
   # Prepare figure
   plt.figure(figsize=(fig_width,fig_height))

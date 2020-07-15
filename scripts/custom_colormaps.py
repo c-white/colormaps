@@ -130,3 +130,7 @@ def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num
   cmap = colors.LinearSegmentedColormap.from_list(name, x_rgb1)
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
+
+# Instances of perceptually uniform helix
+def cool_uniform(name='cool_uniform', **kwargs):
+  return helix_uniform((10.0, 30.0, 230.0), (80.0, 50.0, 330.0), 0, name=name, **kwargs)
