@@ -6,8 +6,9 @@ Script for plotting all images with all colormaps.
 Datasets:
   - cmb: cosmic microwave background temperature
   - complex: complex-valued function on complex plane
-  - kh_bb_ratio: magnetized Kelvin-Helmholtz magnetization
+  - kh_bb_ratio: magnetized Kelvin-Helmholtz magnetic field ratio
   - kh_rho: magnetized Kelvin-Helmholtz density
+  - ray: synchrotron intensity from ray tracing of GR simulation
   - torus_j: equatorial slice of current density from GR torus
   - torus_rho: poloidal slice of density from GR torus
 
@@ -39,7 +40,7 @@ def main(**kwargs):
 
   # Plotting parameters - layout
   fig_width = 3.35
-  aspects = {'cmb': 2.0, 'complex': 2.0, 'kh_bb_ratio': 2.0, 'kh_rho': 2.0, 'torus_j': 1.0, 'torus_rho': 1.0}
+  aspects = {'cmb': 2.0, 'complex': 2.0, 'kh_bb_ratio': 2.0, 'kh_rho': 2.0, 'ray': 1.0, 'torus_j': 1.0, 'torus_rho': 1.0}
   lmar_frac = 0.01
   rmar_frac = 0.01
   bmar_frac = 0.01
@@ -67,6 +68,9 @@ def main(**kwargs):
   if 'kh_rho' in kwargs['datasets']:
     data_local = np.load('{0}/kh_rho.npz'.format(data_dir))
     data['kh_rho'] = dict(data_local)
+  if 'ray' in kwargs['datasets']:
+    data_local = np.load('{0}/ray.npz'.format(data_dir))
+    data['ray'] = dict(data_local)
   if 'torus_j' in kwargs['datasets']:
     data_local = np.load('{0}/torus_j.npz'.format(data_dir))
     data['torus_j'] = dict(data_local)
@@ -113,6 +117,11 @@ def main(**kwargs):
         yf = data['kh_rho']['yf']
         vals = data['kh_rho']['rho']
         ax.pcolormesh(xf, yf, vals, vmin=0.7, vmax=1.1, cmap=colormap)
+      if dataset == 'ray':
+        xf = data['ray']['xf']
+        yf = data['ray']['yf']
+        vals = data['ray']['tt_b']
+        ax.pcolormesh(xf, yf, vals, vmin=0.0, vmax=9.0, cmap=colormap)
       if dataset == 'torus_j':
         xf = data['torus_j']['xf']
         yf = data['torus_j']['yf']
@@ -142,6 +151,9 @@ def main(**kwargs):
       if dataset in ('kh_bb_ratio', 'kh_rho'):
         ax.set_xlim((0.0, 1.0))
         ax.set_ylim((-0.25, 0.25))
+      if dataset == 'ray':
+        ax.set_xlim((0.0, 1.0))
+        ax.set_ylim((0.0, 1.0))
       if dataset == 'torus_j':
         ax.set_xlim((-20.0, 20.0))
         ax.set_ylim((-20.0, 20.0))
@@ -163,7 +175,7 @@ def main(**kwargs):
 
 # Parser for list of datasets
 def dataset_list(string):
-  valid_datasets = ['cmb', 'complex', 'kh_bb_ratio', 'kh_rho', 'torus_j', 'torus_rho']
+  valid_datasets = ['cmb', 'complex', 'kh_bb_ratio', 'kh_rho', 'ray', 'torus_j', 'torus_rho']
   if string == 'all':
     return valid_datasets[:]
   selected_datasets = string.split(',')
