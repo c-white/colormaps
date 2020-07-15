@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 """
-Script for extracting and saving data from GR torus simulation.
+Script for extracting and saving density data from GR torus simulation.
 """
 
 # Python standard modules
@@ -16,7 +16,7 @@ def main():
   # Parameters
   read_dir = '/Users/cjwhite/codes/athena/vis/python'
   input_file = '/Users/cjwhite/research/athena_method/data/torus/s90_t00_high.prim.01000.athdf'
-  output_file = '/Users/cjwhite/projects/colormaps/data/torus.npz'
+  output_file = '/Users/cjwhite/projects/colormaps/data/torus_rho.npz'
   spin = 0.9
 
   # Load data reader

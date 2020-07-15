@@ -4,7 +4,10 @@
 # Data files
 /data/cmb.npz
 /data/complex.npz
-/data/torus.npz
+/data/kh_bb_ratio.npz
+/data/kh_rho.npz
+/data/torus_j.npz
+/data/torus_rho.npz
 
 # Plot files
 /plots/

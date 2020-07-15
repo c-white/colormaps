@@ -6,10 +6,10 @@ Script for plotting all images with all colormaps.
 Datasets:
   - cmb: cosmic microwave background temperature
   - complex: complex-valued function on complex plane
+  - kh_bb_ratio: magnetized Kelvin-Helmholtz magnetization
+  - kh_rho: magnetized Kelvin-Helmholtz density
+  - torus_j: equatorial slice of current density from GR torus
   - torus_rho: poloidal slice of density from GR torus
-  - magnetized Kelvin-Helmholtz density
-  - magnetized Kelvin-Helmholtz magnetization
-  - equatorial slice of current density from GR torus
 
 Colormaps:
   - viridis
@@ -39,7 +39,7 @@ def main(**kwargs):
 
   # Plotting parameters - layout
   fig_width = 3.35
-  aspects = {'cmb': 2.0, 'complex': 2.0, 'torus_rho': 1.0}
+  aspects = {'cmb': 2.0, 'complex': 2.0, 'kh_bb_ratio': 2.0, 'kh_rho': 2.0, 'torus_j': 1.0, 'torus_rho': 1.0}
   lmar_frac = 0.01
   rmar_frac = 0.01
   bmar_frac = 0.01
@@ -61,9 +61,18 @@ def main(**kwargs):
   if 'complex' in kwargs['datasets']:
     data_local = np.load('{0}/complex.npz'.format(data_dir))
     data['complex'] = dict(data_local)
+  if 'kh_bb_ratio' in kwargs['datasets']:
+    data_local = np.load('{0}/kh_bb_ratio.npz'.format(data_dir))
+    data['kh_bb_ratio'] = dict(data_local)
+  if 'kh_rho' in kwargs['datasets']:
+    data_local = np.load('{0}/kh_rho.npz'.format(data_dir))
+    data['kh_rho'] = dict(data_local)
+  if 'torus_j' in kwargs['datasets']:
+    data_local = np.load('{0}/torus_j.npz'.format(data_dir))
+    data['torus_j'] = dict(data_local)
   if 'torus_rho' in kwargs['datasets']:
-    data_local = np.load('{0}/torus.npz'.format(data_dir))
-    data['torus'] = dict(data_local)
+    data_local = np.load('{0}/torus_rho.npz'.format(data_dir))
+    data['torus_rho'] = dict(data_local)
 
   # Define colormaps
   if 'gray_uniform' in kwargs['colormaps']:
@@ -94,12 +103,31 @@ def main(**kwargs):
         yf = data['complex']['yf']
         vals = np.angle(data['complex']['f'])
         ax.pcolormesh(xf, yf, vals, vmin=-np.pi, vmax=np.pi, cmap=colormap)
+      if dataset == 'kh_bb_ratio':
+        xf = data['kh_bb_ratio']['xf']
+        yf = data['kh_bb_ratio']['yf']
+        vals = data['kh_bb_ratio']['bb_ratio']
+        ax.pcolormesh(xf, yf, vals, vmin=1.0e-2, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
+      if dataset == 'kh_rho':
+        xf = data['kh_rho']['xf']
+        yf = data['kh_rho']['yf']
+        vals = data['kh_rho']['rho']
+        ax.pcolormesh(xf, yf, vals, vmin=0.7, vmax=1.1, cmap=colormap)
+      if dataset == 'torus_j':
+        xf = data['torus_j']['xf']
+        yf = data['torus_j']['yf']
+        vals = data['torus_j']['j_fluid']
+        ax.pcolormesh(xf, yf, vals, vmin=1.0e-3, vmax=1.0e3, norm=LogNorm(), cmap=colormap)
+        spin = data['torus_j']['spin']
+        r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
+        black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')
+        ax.add_artist(black_hole)
       if dataset == 'torus_rho':
-        xf = data['torus']['xf']
-        yf = data['torus']['yf']
-        vals = data['torus']['rho']
+        xf = data['torus_rho']['xf']
+        yf = data['torus_rho']['yf']
+        vals = data['torus_rho']['rho']
         ax.pcolormesh(xf, yf, vals, vmin=1.0e-5, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
-        spin = data['torus']['spin']
+        spin = data['torus_rho']['spin']
         r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
         black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')
         ax.add_artist(black_hole)
@@ -111,6 +139,12 @@ def main(**kwargs):
       if dataset == 'complex':
         ax.set_xlim((-10.0, 10.0))
         ax.set_ylim((-5.0, 5.0))
+      if dataset in ('kh_bb_ratio', 'kh_rho'):
+        ax.set_xlim((0.0, 1.0))
+        ax.set_ylim((-0.25, 0.25))
+      if dataset == 'torus_j':
+        ax.set_xlim((-20.0, 20.0))
+        ax.set_ylim((-20.0, 20.0))
       if dataset == 'torus_rho':
         ax.set_xlim((-50.0, 50.0))
         ax.set_ylim((-50.0, 50.0))
@@ -129,7 +163,7 @@ def main(**kwargs):
 
 # Parser for list of datasets
 def dataset_list(string):
-  valid_datasets = ['cmb', 'complex', 'torus_rho']
+  valid_datasets = ['cmb', 'complex', 'kh_bb_ratio', 'kh_rho', 'torus_j', 'torus_rho']
   if string == 'all':
     return valid_datasets[:]
   selected_datasets = string.split(',')
