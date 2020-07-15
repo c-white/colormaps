@@ -5,7 +5,8 @@ Script for plotting all images with all colormaps.
 
 Datasets:
   - cmb: cosmic microwave background temperature
-  - complex: complex-valued function on complex plane
+  - complex_arg: phase of complex-valued function on complex plane
+  - complex_mag: magnitude of complex-valued function on complex plane
   - kh_bb_ratio: magnetized Kelvin-Helmholtz magnetic field ratio
   - kh_rho: magnetized Kelvin-Helmholtz density
   - ray: synchrotron intensity from ray tracing of GR simulation
@@ -42,7 +43,7 @@ def main(**kwargs):
 
   # Plotting parameters - layout
   fig_width = 3.35
-  aspects = {'cmb': 2.0, 'complex': 2.0, 'kh_bb_ratio': 2.0, 'kh_rho': 2.0, 'ray': 1.0, 'torus_j': 1.0, 'torus_rho': 1.0}
+  aspects = {'cmb': 2.0, 'complex_arg': 2.0, 'complex_mag': 2.0, 'kh_bb_ratio': 2.0, 'kh_rho': 2.0, 'ray': 1.0, 'torus_j': 1.0, 'torus_rho': 1.0}
   lmar_frac = 0.01
   rmar_frac = 0.01
   bmar_frac = 0.01
@@ -61,7 +62,7 @@ def main(**kwargs):
   if 'cmb' in kwargs['datasets']:
     data_local = np.load('{0}/cmb.npz'.format(data_dir))
     data['cmb'] = dict(data_local)
-  if 'complex' in kwargs['datasets']:
+  if 'complex_arg' in kwargs['datasets'] or 'complex_mag' in kwargs['datasets']:
     data_local = np.load('{0}/complex.npz'.format(data_dir))
     data['complex'] = dict(data_local)
   if 'kh_bb_ratio' in kwargs['datasets'] or 'kh_rho' in kwargs['datasets']:
@@ -104,11 +105,16 @@ def main(**kwargs):
         yf = data['cmb']['yf']
         vals = data['cmb']['temperature']
         ax.pcolormesh(xf, yf, vals, vmin=-6.0e-4, vmax=6.0e-4, cmap=colormap)
-      if dataset == 'complex':
+      if dataset == 'complex_arg':
         xf = data['complex']['xf']
         yf = data['complex']['yf']
         vals = np.angle(data['complex']['f'])
         ax.pcolormesh(xf, yf, vals, vmin=-np.pi, vmax=np.pi, cmap=colormap)
+      if dataset == 'complex_mag':
+        xf = data['complex']['xf']
+        yf = data['complex']['yf']
+        vals = np.abs(data['complex']['f'])
+        ax.pcolormesh(xf, yf, vals, vmin=1.0e-4, vmax=1.0e4, norm=LogNorm(), cmap=colormap)
       if dataset == 'kh_bb_ratio':
         xf = data['kh']['xf']
         yf = data['kh']['yf']
@@ -147,7 +153,7 @@ def main(**kwargs):
       if dataset == 'cmb':
         ax.set_xlim((-2.0**1.5, 2.0**1.5))
         ax.set_ylim((-2.0**0.5, 2.0**0.5))
-      if dataset == 'complex':
+      if dataset in ('complex_arg', 'complex_mag'):
         ax.set_xlim((-10.0, 10.0))
         ax.set_ylim((-5.0, 5.0))
       if dataset in ('kh_bb_ratio', 'kh_rho'):
@@ -177,7 +183,7 @@ def main(**kwargs):
 
 # Parser for list of datasets
 def dataset_list(string):
-  valid_datasets = ['cmb', 'complex', 'kh_bb_ratio', 'kh_rho', 'ray', 'torus_j', 'torus_rho']
+  valid_datasets = ['cmb', 'complex_arg', 'complex_mag', 'kh_bb_ratio', 'kh_rho', 'ray', 'torus_j', 'torus_rho']
   if string == 'all':
     return valid_datasets[:]
   selected_datasets = string.split(',')
