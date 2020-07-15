@@ -88,6 +88,9 @@ def main(**kwargs):
   for dataset in kwargs['datasets']:
     for colormap in kwargs['colormaps']:
 
+      # Report status
+      print('Plotting dataset {0} with colormap {1}'.format(dataset, colormap))
+
       # Calculate specific layout
       panel_height = fig_width / aspects[dataset]
       fig_height = bmar + panel_height + tmar
