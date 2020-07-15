@@ -13,9 +13,11 @@ Datasets:
   - torus_rho: poloidal slice of density from GR torus
 
 Colormaps:
-  - viridis
-  - gray_uniform
-  - cool_uniform
+  - inferno (built-in, sequential)
+  - viridis (built-in, sequential)
+  - RdBu (built-in, divergin)
+  - gray_uniform (custom, sequential)
+  - cool_uniform (custom, sequential)
 """
 
 # Python standard modules
@@ -62,12 +64,9 @@ def main(**kwargs):
   if 'complex' in kwargs['datasets']:
     data_local = np.load('{0}/complex.npz'.format(data_dir))
     data['complex'] = dict(data_local)
-  if 'kh_bb_ratio' in kwargs['datasets']:
-    data_local = np.load('{0}/kh_bb_ratio.npz'.format(data_dir))
-    data['kh_bb_ratio'] = dict(data_local)
-  if 'kh_rho' in kwargs['datasets']:
-    data_local = np.load('{0}/kh_rho.npz'.format(data_dir))
-    data['kh_rho'] = dict(data_local)
+  if 'kh_bb_ratio' in kwargs['datasets'] or 'kh_rho' in kwargs['datasets']:
+    data_local = np.load('{0}/kh.npz'.format(data_dir))
+    data['kh'] = dict(data_local)
   if 'ray' in kwargs['datasets']:
     data_local = np.load('{0}/ray.npz'.format(data_dir))
     data['ray'] = dict(data_local)
@@ -111,14 +110,14 @@ def main(**kwargs):
         vals = np.angle(data['complex']['f'])
         ax.pcolormesh(xf, yf, vals, vmin=-np.pi, vmax=np.pi, cmap=colormap)
       if dataset == 'kh_bb_ratio':
-        xf = data['kh_bb_ratio']['xf']
-        yf = data['kh_bb_ratio']['yf']
-        vals = data['kh_bb_ratio']['bb_ratio']
+        xf = data['kh']['xf']
+        yf = data['kh']['yf']
+        vals = data['kh']['bb_ratio']
         ax.pcolormesh(xf, yf, vals, vmin=1.0e-2, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
       if dataset == 'kh_rho':
-        xf = data['kh_rho']['xf']
-        yf = data['kh_rho']['yf']
-        vals = data['kh_rho']['rho']
+        xf = data['kh']['xf']
+        yf = data['kh']['yf']
+        vals = data['kh']['rho']
         ax.pcolormesh(xf, yf, vals, vmin=0.7, vmax=1.1, cmap=colormap)
       if dataset == 'ray':
         xf = data['ray']['xf']
@@ -189,7 +188,7 @@ def dataset_list(string):
 
 # Parser for list of colormaps
 def colormap_list(string):
-  valid_colormaps = ['viridis', 'gray_uniform', 'cool_uniform']
+  valid_colormaps = ['inferno', 'viridis', 'RdBu', 'gray_uniform', 'cool_uniform']
   if string == 'all':
     return valid_colormaps[:]
   selected_colormaps = string.split(',')

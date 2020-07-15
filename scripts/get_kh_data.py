@@ -16,7 +16,7 @@ def main():
   # Parameters
   read_dir = '/Users/cjwhite/codes/athena/vis/python'
   input_file = '/Users/cjwhite/research/athena_method/data/opt/kh_opt_hlle.prim.00001.athdf'
-  output_file = '/Users/cjwhite/projects/colormaps/data/kh_{0}.npz'
+  output_file = '/Users/cjwhite/projects/colormaps/data/kh.npz'
 
   # Load data reader
   sys.path.insert(0, read_dir)
@@ -35,18 +35,14 @@ def main():
   bb_ratio = (bb1 ** 2 + bb2 ** 2) ** 0.5 / bb3
 
   # Assemble data
-  data_out_rho = {}
-  data_out_rho['xf'] = xf
-  data_out_rho['yf'] = yf
-  data_out_rho['rho'] = rho
-  data_out_bb_ratio = {}
-  data_out_bb_ratio['xf'] = xf
-  data_out_bb_ratio['yf'] = yf
-  data_out_bb_ratio['bb_ratio'] = bb_ratio
+  data_out = {}
+  data_out['xf'] = xf
+  data_out['yf'] = yf
+  data_out['rho'] = rho
+  data_out['bb_ratio'] = bb_ratio
 
   # Save data
-  np.savez(output_file.format('rho'), **data_out_rho)
-  np.savez(output_file.format('bb_ratio'), **data_out_bb_ratio)
+  np.savez(output_file, **data_out)
 
 # Execute main function
 if __name__ == '__main__':

@@ -4,9 +4,11 @@
 Script for plotting all colorbars.
 
 Colormaps:
-  - viridis
-  - gray_uniform
-  - cool_uniform
+  - inferno (built-in, sequential)
+  - viridis (built-in, sequential)
+  - RdBu (built-in, divergin)
+  - gray_uniform (custom, sequential)
+  - cool_uniform (custom, sequential)
 """
 
 # Python plotting modules
@@ -27,7 +29,7 @@ def main():
   # Parameters
   data_dir = '/Users/cjwhite/projects/colormaps/data'
   plot_dir = '/Users/cjwhite/projects/colormaps/plots'
-  cmaps = ['viridis', 'gray_uniform', 'cool_uniform']
+  cmaps = ['inferno', 'viridis', 'RdBu', 'gray_uniform', 'cool_uniform']
 
   # Plotting parameters - layout
   fig_width = 3.35
