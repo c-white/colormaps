@@ -14,11 +14,11 @@ Datasets:
   - torus_rho: poloidal slice of density from GR torus
 
 Colormaps:
-  - inferno (built-in, sequential)
-  - viridis (built-in, sequential)
-  - RdBu (built-in, divergin)
-  - gray_uniform (custom, sequential)
-  - cool_uniform (custom, sequential)
+  - inferno: built-in, sequential
+  - viridis: built-in, sequential
+  - RdBu: built-in, diverging
+  - cool_uniform: custom, sequential
+  - gray_uniform: custom, sequential
 """
 
 # Python standard modules
@@ -79,10 +79,10 @@ def main(**kwargs):
     data['torus_rho'] = dict(data_local)
 
   # Define colormaps
-  if 'gray_uniform' in kwargs['colormaps']:
-    custom_colormaps.gray_uniform()
   if 'cool_uniform' in kwargs['colormaps']:
     custom_colormaps.cool_uniform()
+  if 'gray_uniform' in kwargs['colormaps']:
+    custom_colormaps.gray_uniform()
 
   # Go through datasets and colormaps
   for dataset in kwargs['datasets']:
@@ -194,7 +194,7 @@ def dataset_list(string):
 
 # Parser for list of colormaps
 def colormap_list(string):
-  valid_colormaps = ['inferno', 'viridis', 'RdBu', 'gray_uniform', 'cool_uniform']
+  valid_colormaps = ['inferno', 'viridis', 'RdBu', 'cool_uniform', 'gray_uniform']
   if string == 'all':
     return valid_colormaps[:]
   selected_colormaps = string.split(',')

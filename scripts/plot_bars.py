@@ -7,8 +7,8 @@ Colormaps:
   - inferno (built-in, sequential)
   - viridis (built-in, sequential)
   - RdBu (built-in, divergin)
-  - gray_uniform (custom, sequential)
   - cool_uniform (custom, sequential)
+  - gray_uniform (custom, sequential)
 """
 
 # Python plotting modules
@@ -29,7 +29,7 @@ def main():
   # Parameters
   data_dir = '/Users/cjwhite/projects/colormaps/data'
   plot_dir = '/Users/cjwhite/projects/colormaps/plots'
-  cmaps = ['inferno', 'viridis', 'RdBu', 'gray_uniform', 'cool_uniform']
+  cmaps = ['inferno', 'viridis', 'RdBu', 'cool_uniform', 'gray_uniform']
 
   # Plotting parameters - layout
   fig_width = 3.35
@@ -56,8 +56,8 @@ def main():
   fig_height = bmar + num_rows * cbar_height + (num_rows - 1) * hmar + tmar
 
   # Define colormaps
-  custom_colormaps.gray_uniform()
   custom_colormaps.cool_uniform()
+  custom_colormaps.gray_uniform()
 
   # Prepare figure
   plt.figure(figsize=(fig_width,fig_height))
