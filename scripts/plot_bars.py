@@ -4,11 +4,14 @@
 Script for plotting all colorbars.
 
 Colormaps:
-  - inferno (built-in, sequential)
-  - viridis (built-in, sequential)
-  - RdBu (built-in, divergin)
-  - cool_uniform (custom, sequential)
-  - gray_uniform (custom, sequential)
+  - plasma: built-in, sequential
+  - inferno: built-in, sequential
+  - magma: built-in, sequential
+  - viridis: built-in, sequential
+  - cool_uniform: custom, sequential
+  - gray_uniform: custom, sequential
+  - RdBu: built-in, diverging
+  - red_black_blue: custom, diverging
 """
 
 # Python plotting modules
@@ -29,7 +32,7 @@ def main():
   # Parameters
   data_dir = '/Users/cjwhite/projects/colormaps/data'
   plot_dir = '/Users/cjwhite/projects/colormaps/plots'
-  cmaps = ['inferno', 'viridis', 'RdBu', 'cool_uniform', 'gray_uniform']
+  cmaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_black_blue']
 
   # Plotting parameters - layout
   fig_width = 3.35
@@ -58,6 +61,7 @@ def main():
   # Define colormaps
   custom_colormaps.cool_uniform()
   custom_colormaps.gray_uniform()
+  custom_colormaps.red_black_blue()
 
   # Prepare figure
   plt.figure(figsize=(fig_width,fig_height))

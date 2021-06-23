@@ -56,6 +56,35 @@ def gray_uniform(name='gray_uniform', num_points=1024, colorspace='CAM02UCS'):
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
 
+# Linear segment
+def linear_segment(anchors, samples_rgb1, name='linear_segment', num_points=1024):
+
+  # Prepare abscissas
+  x = np.linspace(0.0, 1.0, num_points)
+
+  # Convert samples to perceptually uniform space
+  samples_jjab = cs.cspace_convert(samples_rgb1, 'sRGB1', cs.CAM02UCS)
+
+  # Interpolate samples in perceptually uniform space
+  jjp = np.interp(x, anchors, samples_jjab[:,0])
+  ap = np.interp(x, anchors, samples_jjab[:,1])
+  bp = np.interp(x, anchors, samples_jjab[:,2])
+  jjab = np.hstack((jjp[:,None], ap[:,None], bp[:,None]))
+
+  # Calculate RGB values
+  with warnings.catch_warnings():
+    warnings.filterwarnings('ignore', 'divide by zero encountered in true_divide', RuntimeWarning)
+    rgb1 = cs.cspace_convert(jjab, cs.CAM02UCS, 'sRGB1')
+
+  # Clip colors
+  rgb1 = np.clip(rgb1, 0.0, 1.0)
+
+  # Create colormap
+  x_rgb1 = [(x_val, rgb1_val) for x_val, rgb1_val in zip(x, rgb1)]
+  cmap = colors.LinearSegmentedColormap.from_list(name, x_rgb1)
+  cm.register_cmap(name=name, cmap=cmap)
+  return cmap
+
 # Perceptually uniform helix
 def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num_points=1024):
 
@@ -131,6 +160,48 @@ def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
 
-# Instances of perceptually uniform helix
+# Linear segment instance
+def red_black_blue(name='red_black_blue', **kwargs):
+
+  # Parameters
+  red_arg = 0.15
+  blue_arg = 0.75
+  red_loc = 0.1
+  blue_loc = 1.0
+  black_val = 0.0
+
+  # Define initial anchor values
+  red_rgb1 = cm.get_cmap('RdBu')(red_arg)[:-1]
+  blue_rgb1 = cm.get_cmap('RdBu')(blue_arg)[:-1]
+  black_rgb1 = (black_val, black_val, black_val)
+
+  # Convert to perceptually uniform space
+  red_jjab = cs.cspace_convert(red_rgb1, 'sRGB1', cs.CAM02UCS)
+  blue_jjab = cs.cspace_convert(blue_rgb1, 'sRGB1', cs.CAM02UCS)
+  black_jjab = cs.cspace_convert(black_rgb1, 'sRGB1', cs.CAM02UCS)
+
+  # Adjust anchors
+  red_jjab[0] = black_jjab[0] + (red_jjab[0] - black_jjab[0]) / (red_loc - 0.5) * (0.0 - 0.5)
+  blue_jjab[0] = black_jjab[0] + (blue_jjab[0] - black_jjab[0]) / (blue_loc - 0.5) * (1.0 - 0.5)
+  jjp = 0.5 * (red_jjab[0] + blue_jjab[0])
+  red_jjab[0] = jjp
+  blue_jjab[0] = jjp
+  black_jjab[1] = 0.0
+  black_jjab[2] = 0.0
+
+  # Convert to RGB
+  red_rgb1 = cs.cspace_convert(red_jjab, cs.CAM02UCS, 'sRGB1')
+  blue_rgb1 = cs.cspace_convert(blue_jjab, cs.CAM02UCS, 'sRGB1')
+  black_rgb1 = cs.cspace_convert(black_jjab, cs.CAM02UCS, 'sRGB1')
+
+  # Clip anchors
+  red_rgb1 = np.clip(red_rgb1, 0.0, 1.0)
+  blue_rgb1 = np.clip(blue_rgb1, 0.0, 1.0)
+  black_rgb1 = np.clip(black_rgb1, 0.0, 1.0)
+
+  # Create colormap
+  return linear_segment((0.0, 0.5, 1.0), (red_rgb1, black_rgb1, blue_rgb1), name=name, **kwargs)
+
+# Perceptually uniform helix instance
 def cool_uniform(name='cool_uniform', **kwargs):
   return helix_uniform((10.0, 30.0, 230.0), (80.0, 50.0, 330.0), 0, name=name, **kwargs)

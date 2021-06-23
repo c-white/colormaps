@@ -14,11 +14,14 @@ Datasets:
   - torus_rho: poloidal slice of density from GR torus
 
 Colormaps:
+  - plasma: built-in, sequential
   - inferno: built-in, sequential
+  - magma: built-in, sequential
   - viridis: built-in, sequential
-  - RdBu: built-in, diverging
   - cool_uniform: custom, sequential
   - gray_uniform: custom, sequential
+  - RdBu: built-in, diverging
+  - red_black_blue: custom, diverging
 """
 
 # Python standard modules
@@ -83,6 +86,8 @@ def main(**kwargs):
     custom_colormaps.cool_uniform()
   if 'gray_uniform' in kwargs['colormaps']:
     custom_colormaps.gray_uniform()
+  if 'red_black_blue' in kwargs['colormaps']:
+    custom_colormaps.red_black_blue()
 
   # Go through datasets and colormaps
   for dataset in kwargs['datasets']:
@@ -143,7 +148,7 @@ def main(**kwargs):
         xf = data['torus_rho']['xf']
         yf = data['torus_rho']['yf']
         vals = data['torus_rho']['rho']
-        ax.pcolormesh(xf, yf, vals, vmin=1.0e-5, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
+        ax.pcolormesh(xf, yf, vals, vmin=1.0e-6, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
         spin = data['torus_rho']['spin']
         r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
         black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')
@@ -194,7 +199,7 @@ def dataset_list(string):
 
 # Parser for list of colormaps
 def colormap_list(string):
-  valid_colormaps = ['inferno', 'viridis', 'RdBu', 'cool_uniform', 'gray_uniform']
+  valid_colormaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_black_blue']
   if string == 'all':
     return valid_colormaps[:]
   selected_colormaps = string.split(',')
