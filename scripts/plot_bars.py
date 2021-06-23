@@ -14,7 +14,7 @@ Colormaps:
   - red_black_blue: custom, diverging
 """
 
-# Python plotting modules
+# Plotting modules
 import matplotlib
 matplotlib.use('agg')
 matplotlib.rc('font', size=8, family='serif')
@@ -22,8 +22,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colorbar import ColorbarBase
 from matplotlib.colors import Normalize
 
-# Modules
-import numpy as np
+# Custom color modules
 import custom_colormaps
 
 # Main function

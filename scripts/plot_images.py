@@ -27,14 +27,16 @@ Colormaps:
 # Python standard modules
 import argparse
 
-# Python plotting modules
+# Numerical modules
+import numpy as np
+
+# Plotting modules
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
-# Other modules
-import numpy as np
+# Custom color modules
 import custom_colormaps
 
 # Main function
