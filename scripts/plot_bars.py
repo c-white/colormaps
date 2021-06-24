@@ -11,6 +11,7 @@ Colormaps:
   - cool_uniform: custom, sequential
   - gray_uniform: custom, sequential
   - RdBu: built-in, diverging
+  - red_white_blue: custom, diverging
   - red_black_blue: custom, diverging
 """
 
@@ -31,7 +32,7 @@ def main():
   # Parameters
   data_dir = '/Users/cjwhite/projects/colormaps/data'
   plot_dir = '/Users/cjwhite/projects/colormaps/plots'
-  cmaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_black_blue']
+  cmaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_white_blue', 'red_black_blue']
 
   # Plotting parameters - layout
   fig_width = 3.35
@@ -60,13 +61,14 @@ def main():
   # Define colormaps
   custom_colormaps.cool_uniform()
   custom_colormaps.gray_uniform()
+  custom_colormaps.red_white_blue()
   custom_colormaps.red_black_blue()
 
   # Prepare figure
   plt.figure(figsize=(fig_width,fig_height))
   axes = []
   for n in range(1, num_rows * num_cols + 1):
-      axes.append(plt.subplot(num_rows, num_cols, n))
+    axes.append(plt.subplot(num_rows, num_cols, n))
 
   # Make colorbars
   norm = Normalize(vmin=0.0, vmax=1.0)

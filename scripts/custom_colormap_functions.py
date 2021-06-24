@@ -14,32 +14,60 @@ import colorspacious as cs
 import matplotlib.cm as cm
 import matplotlib.colors as colors
 
-# Piecewise linear perceptually uniform segments
-def segment_uniform(anchors, samples_rgb1, name='segment_uniform', num_points=1024):
+# Segmented colormap that is piecewise linear in J'a'b'
+def linear_segment(anchors, samples_below_jjab, samples_above_jjab, name='linear_segment', min_points=1024, tol=1.0e-6):
 
   # Prepare abscissas
-  x = np.linspace(0.0, 1.0, num_points)
-
-  # Convert samples to perceptually uniform space
-  samples_jjab = cs.cspace_convert(samples_rgb1, 'sRGB1', cs.CAM02UCS)
+  x = np.linspace(0.0, 1.0, min_points)
+  for anchor in anchors:
+    if np.min(np.abs(x - anchor) > tol):
+      ind = np.where(x > anchor)[0][0]
+      x = np.concatenate((x[:ind], [anchor], x[ind:]))
+  num_points = len(x)
 
   # Interpolate samples in perceptually uniform space
-  jjp = np.interp(x, anchors, samples_jjab[:,0])
-  ap = np.interp(x, anchors, samples_jjab[:,1])
-  bp = np.interp(x, anchors, samples_jjab[:,2])
-  jjab = np.hstack((jjp[:,None], ap[:,None], bp[:,None]))
+  below_jjab = np.empty((num_points, 3))
+  above_jjab = np.empty((num_points, 3))
+  for n in range(num_points):
+    if x[n] < anchors[0]:
+      val_jjab = samples_below_jjab[0,:]
+      below_jjab[n,:] = val_jjab
+      above_jjab[n,:] = val_jjab
+    elif x[n] > anchors[-1]:
+      val_jjab = samples_above_jjab[-1,:]
+      below_jjab[n,:] = val_jjab
+      above_jjab[n,:] = val_jjab
+    elif x[n] == anchors[-1]:
+      below_jjab[n,:] = samples_below_jjab[-1,:]
+      above_jjab[n,:] = samples_above_jjab[-1,:]
+    else:
+      ind = np.where(anchors <= x[n])[0][-1]
+      if x[n] == anchors[ind]:
+        below_jjab[n,:] = samples_below_jjab[ind,:]
+        above_jjab[n,:] = samples_above_jjab[ind,:]
+      else:
+        frac = (x[n] - anchors[ind]) / (anchors[ind+1] - anchors[ind])
+        val_jjab = (1.0 - frac) * samples_above_jjab[ind,:] + frac * samples_below_jjab[ind+1,:]
+        below_jjab[n,:] = val_jjab
+        above_jjab[n,:] = val_jjab
 
-  # Calculate RGB values
+  # Convert values to RGB
   with warnings.catch_warnings():
     warnings.filterwarnings('ignore', 'divide by zero encountered in true_divide', RuntimeWarning)
-    rgb1 = cs.cspace_convert(jjab, cs.CAM02UCS, 'sRGB1')
+    warnings.filterwarnings('ignore', 'invalid value encountered in true_divide', RuntimeWarning)
+    below_rgb1 = cs.cspace_convert(below_jjab, cs.CAM02UCS, 'sRGB1')
+    above_rgb1 = cs.cspace_convert(above_jjab, cs.CAM02UCS, 'sRGB1')
 
   # Clip colors
-  rgb1 = np.clip(rgb1, 0.0, 1.0)
+  below_rgb1 = np.clip(below_rgb1, 0.0, 1.0)
+  above_rgb1 = np.clip(above_rgb1, 0.0, 1.0)
 
   # Create colormap
-  x_rgb1 = [(x_val, rgb1_val) for x_val, rgb1_val in zip(x, rgb1)]
-  cmap = colors.LinearSegmentedColormap.from_list(name, x_rgb1)
+  segment_data = {}
+  segment_data['red'] = np.hstack((x[:,None], below_rgb1[:,:1], above_rgb1[:,:1]))
+  segment_data['green'] = np.hstack((x[:,None], below_rgb1[:,1:2], above_rgb1[:,1:2]))
+  segment_data['blue'] = np.hstack((x[:,None], below_rgb1[:,2:], above_rgb1[:,2:]))
+  cmap = colors.LinearSegmentedColormap(name, segment_data)
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
 
@@ -117,3 +145,13 @@ def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num
   cmap = colors.LinearSegmentedColormap.from_list(name, x_rgb1)
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
+
+# Utility bump function
+def bump_function_aux(x, k):
+  if x <= 0.0:
+    return 1.0
+  elif x >= 1.0:
+    return 0.0
+  else:
+    return np.exp(x ** k / (x ** k - 1.0))
+bump_function = np.vectorize(bump_function_aux)

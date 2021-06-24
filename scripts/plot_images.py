@@ -21,6 +21,7 @@ Colormaps:
   - cool_uniform: custom, sequential
   - gray_uniform: custom, sequential
   - RdBu: built-in, diverging
+  - red_white_blue: custom, diverging
   - red_black_blue: custom, diverging
 """
 
@@ -88,6 +89,8 @@ def main(**kwargs):
     custom_colormaps.cool_uniform()
   if 'gray_uniform' in kwargs['colormaps']:
     custom_colormaps.gray_uniform()
+  if 'red_white_blue' in kwargs['colormaps']:
+    custom_colormaps.red_white_blue()
   if 'red_black_blue' in kwargs['colormaps']:
     custom_colormaps.red_black_blue()
 
@@ -201,7 +204,7 @@ def dataset_list(string):
 
 # Parser for list of colormaps
 def colormap_list(string):
-  valid_colormaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_black_blue']
+  valid_colormaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_white_blue', 'red_black_blue']
   if string == 'all':
     return valid_colormaps[:]
   selected_colormaps = string.split(',')
