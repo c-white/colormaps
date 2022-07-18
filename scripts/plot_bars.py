@@ -4,12 +4,19 @@
 Script for plotting all colorbars.
 
 Colormaps:
-  - plasma: built-in, sequential
-  - inferno: built-in, sequential
-  - magma: built-in, sequential
-  - viridis: built-in, sequential
-  - cool_uniform: custom, sequential
-  - gray_uniform: custom, sequential
+  - viridis: built-in, monotonic
+  - plasma: built-in, monotonic
+  - inferno: built-in, monotonic
+  - magma: built-in, monotonic
+  - gray_uniform: custom, monotonic
+  - cool_uniform: custom, monotonic
+  - warm_uniform: custom, monotonic
+  - viridis_alt: custom, monotonic
+  - plasma_alt: custom, monotonic
+  - inferno_alt: custom, monotonic
+  - inferno_k: custom, monotonic
+  - inferno_w: custom, monotonic
+  - inferno_kw: custom, monotonic
   - RdBu: built-in, diverging
   - red_white_blue: custom, diverging
   - red_black_blue: custom, diverging
@@ -32,7 +39,7 @@ def main():
   # Parameters
   data_dir = '/Users/cjwhite/projects/colormaps/data'
   plot_dir = '/Users/cjwhite/projects/colormaps/plots'
-  cmaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_white_blue', 'red_black_blue']
+  cmaps = ['viridis', 'plasma', 'inferno', 'magma', 'gray_uniform', 'cool_uniform', 'warm_uniform', 'viridis_alt', 'plasma_alt', 'inferno_alt', 'inferno_k', 'inferno_w', 'inferno_kw', 'RdBu', 'red_white_blue', 'red_black_blue']
 
   # Plotting parameters - layout
   fig_width = 3.35
@@ -59,8 +66,15 @@ def main():
   fig_height = bmar + num_rows * cbar_height + (num_rows - 1) * hmar + tmar
 
   # Define colormaps
-  custom_colormaps.cool_uniform()
   custom_colormaps.gray_uniform()
+  custom_colormaps.cool_uniform()
+  custom_colormaps.warm_uniform()
+  custom_colormaps.viridis_alt()
+  custom_colormaps.plasma_alt()
+  custom_colormaps.inferno_alt()
+  custom_colormaps.inferno_k()
+  custom_colormaps.inferno_w()
+  custom_colormaps.inferno_kw()
   custom_colormaps.red_white_blue()
   custom_colormaps.red_black_blue()
 

@@ -16,7 +16,7 @@ import matplotlib.colors as colors
 # Custom color modules
 import custom_colormap_functions
 
-# Perceptually uniform grayscale
+# Perceptually uniform grayscale colormap
 def gray_uniform(name='gray_uniform', num_points=1024, colorspace='CAM02UCS'):
 
   # Prepare abscissas
@@ -59,6 +59,194 @@ def gray_uniform(name='gray_uniform', num_points=1024, colorspace='CAM02UCS'):
   cmap = colors.LinearSegmentedColormap.from_list(name, x_rgb1)
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
+
+# Blue-pink perceptually uniform monotonic colormap
+def cool_uniform(name='cool_uniform', **kwargs):
+
+  # Parameters
+  start_jjmmh = (10.0, 30.0, 230.0)
+  end_jjmmh = (80.0, 50.0, 330.0)
+  winding_num = 0
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+
+# Red-yellow perceptually uniform monotonic colormap
+def warm_uniform(name='warm_uniform', **kwargs):
+
+  # Parameters
+  start_jjmmh = (20.0, 60.0, 0.0)
+  end_jjmmh = (90.0, 100.0, 100.0)
+  winding_num = 0
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+
+# Perceptually uniform monotonic colormap matching endpoints of viridis
+def viridis_alt(name='viridis_alt', **kwargs):
+
+  # Parameters
+  cmap_base_name = 'viridis'
+  start_val = 0.0
+  end_val = 1.0
+  winding_num = 0
+
+  # Calculate endpoints
+  start_rgb1 = cm.get_cmap(cmap_base_name)(start_val)[:-1]
+  end_rgb1 = cm.get_cmap(cmap_base_name)(end_val)[:-1]
+  start_jjmmh = cs.cspace_convert(start_rgb1, 'sRGB1', 'JMh')
+  end_jjmmh = cs.cspace_convert(end_rgb1, 'sRGB1', 'JMh')
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+
+# Perceptually uniform monotonic colormap matching endpoints of plasma
+def plasma_alt(name='plasma_alt', **kwargs):
+
+  # Parameters
+  cmap_base_name = 'plasma'
+  start_val = 0.0
+  end_val = 1.0
+  winding_num = 1
+
+  # Calculate endpoints
+  start_rgb1 = cm.get_cmap(cmap_base_name)(start_val)[:-1]
+  end_rgb1 = cm.get_cmap(cmap_base_name)(end_val)[:-1]
+  start_jjmmh = cs.cspace_convert(start_rgb1, 'sRGB1', 'JMh')
+  end_jjmmh = cs.cspace_convert(end_rgb1, 'sRGB1', 'JMh')
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+
+# Perceptually uniform monotonic colormap based on inferno
+def inferno_alt(name='inferno_alt', **kwargs):
+
+  # Parameters
+  cmap_base_name = 'inferno'
+  start_val = 0.1
+  end_val = 0.95
+  start_factor = 2.0
+  end_factor = 1.5
+  winding_num = 1
+
+  # Calculate endpoints
+  start_rgb1 = cm.get_cmap(cmap_base_name)(start_val)[:-1]
+  end_rgb1 = cm.get_cmap(cmap_base_name)(end_val)[:-1]
+  start_jjmmh = cs.cspace_convert(start_rgb1, 'sRGB1', 'JMh')
+  end_jjmmh = cs.cspace_convert(end_rgb1, 'sRGB1', 'JMh')
+  start_jjmmh[1] *= start_factor
+  end_jjmmh[1] *= end_factor
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+
+# Perceptually uniform monotonic colormap based on inferno and including black
+def inferno_k(name='inferno_k', **kwargs):
+
+  # Parameters
+  cmap_base_name = 'inferno'
+  a_val = 0.1
+  b_val = 0.95
+  a_mm_factor = 1.2
+  b_mm_factor = 4.0
+  a_loc = 0.1
+  b_loc = 1.0
+  start_jj_adjust = 0.1
+  end_jj_adjust = None
+  winding_num = 1
+
+  # Calculate anchor points
+  a_rgb1 = cm.get_cmap(cmap_base_name)(a_val)[:-1]
+  b_rgb1 = cm.get_cmap(cmap_base_name)(b_val)[:-1]
+  a_jjmmh = cs.cspace_convert(a_rgb1, 'sRGB1', 'JMh')
+  b_jjmmh = cs.cspace_convert(b_rgb1, 'sRGB1', 'JMh')
+  a_jjmmh[1] *= a_mm_factor
+  b_jjmmh[1] *= b_mm_factor
+
+  # Calculate endpoints
+  start_jj = start_jj_adjust if start_jj_adjust is not None else a_jjmmh[0] + (b_jjmmh[0] - a_jjmmh[0]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_jj = end_jj_adjust if end_jj_adjust is not None else b_jjmmh[0] + (b_jjmmh[0] - a_jjmmh[0]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_mm = a_jjmmh[1] + (b_jjmmh[1] - a_jjmmh[1]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_mm = b_jjmmh[1] + (b_jjmmh[1] - a_jjmmh[1]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_h = a_jjmmh[2] + (b_jjmmh[2] + 360.0 * winding_num - a_jjmmh[2]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_h = b_jjmmh[2] + (b_jjmmh[2] + 360.0 * winding_num - a_jjmmh[2]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_jjmmh = (start_jj, start_mm, start_h)
+  end_jjmmh = (end_jj, end_mm, end_h)
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+
+# Perceptually uniform monotonic colormap based on inferno and including white
+def inferno_w(name='inferno_w', **kwargs):
+
+  # Parameters
+  cmap_base_name = 'inferno'
+  a_val = 0.1
+  b_val = 1.0
+  a_mm_factor = 2.5
+  b_mm_factor = 1.2
+  a_loc = 0.0
+  b_loc = 0.9
+  start_jj_adjust = 10.0
+  end_jj_adjust = 125.0
+  winding_num = 1
+
+  # Calculate anchor points
+  a_rgb1 = cm.get_cmap(cmap_base_name)(a_val)[:-1]
+  b_rgb1 = cm.get_cmap(cmap_base_name)(b_val)[:-1]
+  a_jjmmh = cs.cspace_convert(a_rgb1, 'sRGB1', 'JMh')
+  b_jjmmh = cs.cspace_convert(b_rgb1, 'sRGB1', 'JMh')
+  a_jjmmh[1] *= a_mm_factor
+  b_jjmmh[1] *= b_mm_factor
+
+  # Calculate endpoints
+  start_jj = start_jj_adjust if start_jj_adjust is not None else a_jjmmh[0] + (b_jjmmh[0] - a_jjmmh[0]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_jj = end_jj_adjust if end_jj_adjust is not None else b_jjmmh[0] + (b_jjmmh[0] - a_jjmmh[0]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_mm = a_jjmmh[1] + (b_jjmmh[1] - a_jjmmh[1]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_mm = b_jjmmh[1] + (b_jjmmh[1] - a_jjmmh[1]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_h = a_jjmmh[2] + (b_jjmmh[2] + 360.0 * winding_num - a_jjmmh[2]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_h = b_jjmmh[2] + (b_jjmmh[2] + 360.0 * winding_num - a_jjmmh[2]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_jjmmh = (start_jj, start_mm, start_h)
+  end_jjmmh = (end_jj, end_mm, end_h)
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+
+# Perceptually uniform monotonic colormap based on inferno and including black and white
+def inferno_kw(name='inferno_kw', **kwargs):
+
+  # Parameters
+  cmap_base_name = 'inferno'
+  a_val = 0.1
+  b_val = 1.0
+  a_mm_factor = 0.9
+  b_mm_factor = 2.0
+  a_loc = 0.1
+  b_loc = 0.9
+  start_jj_adjust = 0.3
+  end_jj_adjust = 150.0
+  winding_num = 1
+
+  # Calculate anchor points
+  a_rgb1 = cm.get_cmap(cmap_base_name)(a_val)[:-1]
+  b_rgb1 = cm.get_cmap(cmap_base_name)(b_val)[:-1]
+  a_jjmmh = cs.cspace_convert(a_rgb1, 'sRGB1', 'JMh')
+  b_jjmmh = cs.cspace_convert(b_rgb1, 'sRGB1', 'JMh')
+  a_jjmmh[1] *= a_mm_factor
+  b_jjmmh[1] *= b_mm_factor
+
+  # Calculate endpoints
+  start_jj = start_jj_adjust if start_jj_adjust is not None else a_jjmmh[0] + (b_jjmmh[0] - a_jjmmh[0]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_jj = end_jj_adjust if end_jj_adjust is not None else b_jjmmh[0] + (b_jjmmh[0] - a_jjmmh[0]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_mm = a_jjmmh[1] + (b_jjmmh[1] - a_jjmmh[1]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_mm = b_jjmmh[1] + (b_jjmmh[1] - a_jjmmh[1]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_h = a_jjmmh[2] + (b_jjmmh[2] + 360.0 * winding_num - a_jjmmh[2]) / (b_loc - a_loc) * (0.0 - a_loc)
+  end_h = b_jjmmh[2] + (b_jjmmh[2] + 360.0 * winding_num - a_jjmmh[2]) / (b_loc - a_loc) * (1.0 - b_loc)
+  start_jjmmh = (start_jj, start_mm, start_h)
+  end_jjmmh = (end_jj, end_mm, end_h)
+
+  # Create colormap
+  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
 
 # Red-white-blue uniform lightness diverging colormap
 def red_white_blue(name='red_white_blue', **kwargs):
@@ -167,14 +355,3 @@ def red_black_blue(name='red_black_blue', **kwargs):
 
   # Create colormap
   return custom_colormap_functions.linear_segment(anchors, below_jjab, above_jjab, name=name, **kwargs)
-
-# Blue-pink perceptually uniform monotonic colormap
-def cool_uniform(name='cool_uniform', **kwargs):
-
-  # Parameters
-  start_jjmmh = (10.0, 30.0, 230.0)
-  end_jjmmh = (80.0, 50.0, 330.0)
-  winding_num = 0
-
-  # Create colormap
-  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)

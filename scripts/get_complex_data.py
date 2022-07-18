@@ -35,7 +35,7 @@ def main():
   f1_mag = np.abs(z - a) ** 0.5 * np.abs(z + a) ** -0.5
   f1_arg = 0.5 * (np.angle(z - a) - np.angle(z + a))
   f1 = f1_mag * np.exp(f1_arg * 1.0j)
-  f2 = (z - z1) * (z - z2)**3 / (z - z3) / (z - z4)**3
+  f2 = (z - z1) * (z - z2) ** 3 / (z - z3) / (z - z4) ** 3
   f = f1 * f2
 
   # Assemble data

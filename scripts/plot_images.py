@@ -14,12 +14,19 @@ Datasets:
   - torus_rho: poloidal slice of density from GR torus
 
 Colormaps:
-  - plasma: built-in, sequential
-  - inferno: built-in, sequential
-  - magma: built-in, sequential
-  - viridis: built-in, sequential
-  - cool_uniform: custom, sequential
-  - gray_uniform: custom, sequential
+  - viridis: built-in, monotonic
+  - plasma: built-in, monotonic
+  - inferno: built-in, monotonic
+  - magma: built-in, monotonic
+  - gray_uniform: custom, monotonic
+  - cool_uniform: custom, monotonic
+  - warm_uniform: custom, monotonic
+  - viridis_alt: custom, monotonic
+  - plasma_alt: custom, monotonic
+  - inferno_alt: custom, monotonic
+  - inferno_k: custom, monotonic
+  - inferno_w: custom, monotonic
+  - inferno_kw: custom, monotonic
   - RdBu: built-in, diverging
   - red_white_blue: custom, diverging
   - red_black_blue: custom, diverging
@@ -85,10 +92,24 @@ def main(**kwargs):
     data['torus_rho'] = dict(data_local)
 
   # Define colormaps
-  if 'cool_uniform' in kwargs['colormaps']:
-    custom_colormaps.cool_uniform()
   if 'gray_uniform' in kwargs['colormaps']:
     custom_colormaps.gray_uniform()
+  if 'cool_uniform' in kwargs['colormaps']:
+    custom_colormaps.cool_uniform()
+  if 'warm_uniform' in kwargs['colormaps']:
+    custom_colormaps.warm_uniform()
+  if 'viridis_alt' in kwargs['colormaps']:
+    custom_colormaps.viridis_alt()
+  if 'plasma_alt' in kwargs['colormaps']:
+    custom_colormaps.plasma_alt()
+  if 'inferno_alt' in kwargs['colormaps']:
+    custom_colormaps.inferno_alt()
+  if 'inferno_k' in kwargs['colormaps']:
+    custom_colormaps.inferno_k()
+  if 'inferno_w' in kwargs['colormaps']:
+    custom_colormaps.inferno_w()
+  if 'inferno_kw' in kwargs['colormaps']:
+    custom_colormaps.inferno_kw()
   if 'red_white_blue' in kwargs['colormaps']:
     custom_colormaps.red_white_blue()
   if 'red_black_blue' in kwargs['colormaps']:
@@ -204,7 +225,7 @@ def dataset_list(string):
 
 # Parser for list of colormaps
 def colormap_list(string):
-  valid_colormaps = ['plasma', 'inferno', 'magma', 'viridis', 'cool_uniform', 'gray_uniform', 'RdBu', 'red_white_blue', 'red_black_blue']
+  valid_colormaps = ['viridis', 'plasma', 'inferno', 'magma', 'gray_uniform', 'cool_uniform', 'warm_uniform', 'viridis_alt', 'plasma_alt', 'inferno_alt', 'inferno_k', 'inferno_w', 'inferno_kw', 'RdBu', 'red_white_blue', 'red_black_blue']
   if string == 'all':
     return valid_colormaps[:]
   selected_colormaps = string.split(',')
