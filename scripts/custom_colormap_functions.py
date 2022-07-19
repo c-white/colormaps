@@ -67,7 +67,7 @@ def linear_segment(anchors, samples_below_jjab, samples_above_jjab, name='linear
   segment_data['red'] = np.hstack((x[:,None], below_rgb1[:,:1], above_rgb1[:,:1]))
   segment_data['green'] = np.hstack((x[:,None], below_rgb1[:,1:2], above_rgb1[:,1:2]))
   segment_data['blue'] = np.hstack((x[:,None], below_rgb1[:,2:], above_rgb1[:,2:]))
-  cmap = colors.LinearSegmentedColormap(name, segment_data)
+  cmap = colors.LinearSegmentedColormap(name, segment_data, N=num_points)
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
 
@@ -78,6 +78,7 @@ def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num
   c1 = 0.007
   c2 = 0.0228
   hr_max_dev = np.pi / 4.0
+  end_frac = 0.05
 
   # Prepare abscissas
   x = np.linspace(0.0, 1.0, num_points)
@@ -139,10 +140,31 @@ def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num
 
   # Clip colors
   rgb1 = np.clip(rgb1, 0.0, 1.0)
+  jjab = cs.cspace_convert(rgb1, 'sRGB1', cs.CAM02UCS)
+
+  # Ensure clipped lightness is monotonic near ends
+  ind_max = int(end_frac * (num_points - 1)) + 1
+  if jjp[-1] - jjp[0] > 0.0 and np.any(np.diff(jjab[:ind_max,0]) < 0.0):
+    ind = np.where(np.diff(jjab[:ind_max,0]) < 0.0)[0][-1] + 2
+    fracs = (jjp[1:ind] - jjp[0]) / (jjp[ind] - jjp[0])
+    rgb1[1:ind,:] = (1.0 - fracs[:,None]) * rgb1[:1,:] + fracs[:,None] * rgb1[ind:ind+1,:]
+  elif jjp[-1] - jjp[0] < 0.0 and np.any(np.diff(jjab[:ind_max,0]) > 0.0):
+    ind = np.where(np.diff(jjab[:ind_max,0]) > 0.0)[0][-1] + 2
+    fracs = (jjp[1:ind] - jjp[0]) / (jjp[ind] - jjp[0])
+    rgb1[1:ind,:] = (1.0 - fracs[:,None]) * rgb1[:1,:] + fracs[:,None] * rgb1[ind:ind+1,:]
+  ind_min = int((1.0 - end_frac) * (num_points - 1))
+  if jjp[-1] - jjp[0] > 0.0 and np.any(np.diff(jjab[ind_min:,0]) < 0.0):
+    ind = np.where(np.diff(jjab[ind_min:,0]) < 0.0)[0][0] + ind_min - 1
+    fracs = (jjp[ind+1:-1] - jjp[ind]) / (jjp[-1] - jjp[ind])
+    rgb1[ind+1:-1,:] = (1.0 - fracs[:,None]) * rgb1[ind:ind+1,:] + fracs[:,None] * rgb1[-1:,:]
+  elif jjp[-1] - jjp[0] < 0.0 and np.any(np.diff(jjab[ind_min:,0]) > 0.0):
+    ind = np.where(np.diff(jjab[ind_min:,0]) > 0.0)[0][0] + ind_min - 1
+    fracs = (jjp[ind+1:-1] - jjp[ind]) / (jjp[-1] - jjp[ind])
+    rgb1[ind+1:-1,:] = (1.0 - fracs[:,None]) * rgb1[ind:ind+1,:] + fracs[:,None] * rgb1[-1:,:]
 
   # Create colormap
   x_rgb1 = [(x_val, rgb1_val) for x_val, rgb1_val in zip(x, rgb1)]
-  cmap = colors.LinearSegmentedColormap.from_list(name, x_rgb1)
+  cmap = colors.LinearSegmentedColormap.from_list(name, x_rgb1, N=num_points)
   cm.register_cmap(name=name, cmap=cmap)
   return cmap
 

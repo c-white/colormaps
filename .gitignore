@@ -1,5 +1,6 @@
 # Compiled Python files
 /scripts/custom_colormaps.pyc
+/scripts/custom_colormap_data.pyc
 /scripts/custom_colormap_functions.pyc
 
 # Data files
@@ -9,6 +10,7 @@
 /data/ray.npz
 /data/torus_j.npz
 /data/torus_rho.npz
+/scripts/custom_colormap_data.py
 
 # Plot files
 /plots/

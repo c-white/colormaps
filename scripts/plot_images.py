@@ -51,8 +51,8 @@ import custom_colormaps
 def main(**kwargs):
 
   # Parameters
-  data_dir = '/Users/cjwhite/projects/colormaps/data'
-  plot_dir = '/Users/cjwhite/projects/colormaps/plots'
+  data_dir = 'data'
+  plot_dir = 'plots'
 
   # Plotting parameters - layout
   fig_width = 3.35

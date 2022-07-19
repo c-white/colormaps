@@ -17,7 +17,7 @@ def main():
 
   # Parameters
   input_file = '/Users/cjwhite/research/notes/art/data/rays/rays_{0}{1}_40.dat'
-  output_file = '/Users/cjwhite/projects/colormaps/data/ray.npz'
+  output_file = 'data/ray.npz'
   input_format = np.float64
   output_format = np.float32
   n_small = 512

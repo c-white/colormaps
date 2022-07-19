@@ -13,7 +13,7 @@ import numpy as np
 def main():
 
   # Parameters
-  output_file = '/Users/cjwhite/projects/colormaps/data/complex.npz'
+  output_file = 'data/complex.npz'
   extent_x = 10.0
   extent_y = 5.0
   nx = 1024

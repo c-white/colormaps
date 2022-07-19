@@ -4,19 +4,19 @@
 Script for plotting all colorbars.
 
 Colormaps:
-  - viridis: built-in, monotonic
-  - plasma: built-in, monotonic
-  - inferno: built-in, monotonic
-  - magma: built-in, monotonic
   - gray_uniform: custom, monotonic
-  - cool_uniform: custom, monotonic
-  - warm_uniform: custom, monotonic
-  - viridis_alt: custom, monotonic
+  - plasma: built-in, monotonic
   - plasma_alt: custom, monotonic
+  - magma: built-in, monotonic
+  - warm_uniform: custom, monotonic
+  - inferno: built-in, monotonic
   - inferno_alt: custom, monotonic
-  - inferno_k: custom, monotonic
   - inferno_w: custom, monotonic
   - inferno_kw: custom, monotonic
+  - inferno_k: custom, monotonic
+  - cool_uniform: custom, monotonic
+  - viridis: built-in, monotonic
+  - viridis_alt: custom, monotonic
   - RdBu: built-in, diverging
   - red_white_blue: custom, diverging
   - red_black_blue: custom, diverging
@@ -37,9 +37,9 @@ import custom_colormaps
 def main():
 
   # Parameters
-  data_dir = '/Users/cjwhite/projects/colormaps/data'
-  plot_dir = '/Users/cjwhite/projects/colormaps/plots'
-  cmaps = ['viridis', 'plasma', 'inferno', 'magma', 'gray_uniform', 'cool_uniform', 'warm_uniform', 'viridis_alt', 'plasma_alt', 'inferno_alt', 'inferno_k', 'inferno_w', 'inferno_kw', 'RdBu', 'red_white_blue', 'red_black_blue']
+  data_dir = 'data'
+  plot_dir = 'plots'
+  cmaps = ['gray_uniform', 'inferno', 'plasma', 'inferno_alt', 'plasma_alt', 'inferno_w', 'magma', 'inferno_kw', 'warm_uniform', 'inferno_k', 'cool_uniform', 'RdBu', 'viridis', 'red_white_blue', 'viridis_alt', 'red_black_blue']
 
   # Plotting parameters - layout
   fig_width = 3.35

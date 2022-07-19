@@ -16,7 +16,7 @@ def main():
   # Parameters
   read_dir = '/Users/cjwhite/codes/athena/vis/python'
   input_file = '/Users/cjwhite/research/ir_centroid/data/raw/mad_ppm_3.{0}.02001.athdf'
-  output_file = '/Users/cjwhite/projects/colormaps/data/torus_j.npz'
+  output_file = 'data/torus_j.npz'
   spin = 0.98
 
   # Load data reader

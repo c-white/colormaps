@@ -16,7 +16,7 @@ def main():
   # Parameters
   read_dir = '/Users/cjwhite/codes/athena/vis/python'
   input_file = '/Users/cjwhite/research/athena_method/data/opt/kh_opt_hlle.prim.00001.athdf'
-  output_file = '/Users/cjwhite/projects/colormaps/data/kh.npz'
+  output_file = 'data/kh.npz'
 
   # Load data reader
   sys.path.insert(0, read_dir)

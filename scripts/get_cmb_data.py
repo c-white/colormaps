@@ -17,7 +17,7 @@ def main():
 
   # Parameters
   input_file = '/Users/cjwhite/research/presentations/2017_03_berkeley/data/cmb.fits'
-  output_file = '/Users/cjwhite/projects/colormaps/data/cmb.npz'
+  output_file = 'data/cmb.npz'
   num_x = 1024
   num_y = 512
 
