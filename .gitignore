@@ -1,7 +1,5 @@
 # Compiled Python files
-/scripts/custom_colormaps.pyc
-/scripts/custom_colormap_data.pyc
-/scripts/custom_colormap_functions.pyc
+/scripts/*.pyc
 
 # Data files
 /data/cmb.npz
