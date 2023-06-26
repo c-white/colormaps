@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for extracting and saving current data from GR torus simulation.
@@ -14,8 +14,8 @@ import numpy as np
 def main():
 
   # Parameters
-  read_dir = '/Users/cjwhite/codes/athena/vis/python'
-  input_file = '/Users/cjwhite/research/ir_centroid/data/raw/mad_ppm_3.{0}.02001.athdf'
+  read_dir = '/Users/chwhite/codes/athena/vis/python'
+  input_file = '/Users/chwhite/research/archived/ir_centroid/data/raw/mad_ppm_3.{0}.02001.athdf'
   output_file = 'data/torus_j.npz'
   spin = 0.98
 
@@ -36,11 +36,11 @@ def main():
   if nth % 2 != 0:
     raise RuntimeError('must have even number of cells in theta-direction')
   dth = np.pi / nth
-  th_min = np.pi / 2.0 - dth / 2.0
-  th_max = np.pi / 2.0 + dth / 2.0
+  th_min = np.pi/2.0 - dth / 2.0
+  th_max = np.pi/2.0 + dth / 2.0
   data_prim = athena_read.athdf(input_file.format('prim'), quantities=quantities_prim, x2_min=th_min, x2_max=th_max)
   data_user = athena_read.athdf(input_file.format('user'), quantities=quantities_user, x2_min=th_min, x2_max=th_max)
-  th = th[nth/2-1:nth/2+1]
+  th = th[nth//2-1:nth//2+1]
 
   # Calculate grids
   xf = rf[None,:] * np.cos(phf[:,None])

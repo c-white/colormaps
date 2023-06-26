@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for making chromaticity diagrams.
@@ -50,7 +50,7 @@ def main():
   axes['xy']['y_tick_locs'] = np.linspace(0.0, 1.0, 6)
 
   # Plotting parameters - shading
-  shade_facecolor = (1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0)
+  shade_facecolor = (1.0/3.0, 1.0/3.0, 1.0/3.0)
   shade_edgecolor = 'none'
 
   # Plotting parameters - lines and points
@@ -90,7 +90,7 @@ def main():
   gamut_interpolation = 'none'
   gamut_origin = 'lower'
   gamut_extent = (0.0, 1.0, 0.0, 1.0)
-  gamut_gray = 2.0 / 3.0
+  gamut_gray = 2.0/3.0
 
   # Calculate monochromatic locus
   if not np.all(mf.match_lambdas == np.linspace(390.0, 830.0, 441)):
@@ -118,8 +118,8 @@ def main():
   blackbody_sample_inds = np.array((15, 40, 90, 190, 291))
 
   # Calculate illuminant E
-  ee_x = 1.0 / 3.0
-  ee_y = 1.0 / 3.0
+  ee_x = 1.0/3.0
+  ee_y = 1.0/3.0
 
   # Calculate illuminant D65
   if not np.all(si.lambdas_d65 == np.linspace(300.0, 780.0, 97)):

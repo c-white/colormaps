@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for plotting all colorbars.
@@ -62,7 +62,7 @@ def main():
   vmar = vmar_frac * cbar_width
   hmar = hmar_frac * cbar_width
   cbar_height = cbar_height_frac * cbar_width
-  num_rows = (len(cmaps) + num_cols - 1) / num_cols
+  num_rows = (len(cmaps) + num_cols - 1) // num_cols
   fig_height = bmar + num_rows * cbar_height + (num_rows - 1) * hmar + tmar
 
   # Define colormaps

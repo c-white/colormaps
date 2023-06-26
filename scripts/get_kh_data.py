@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for extracting and saving data from Kelvin-Helmholtz simulation.
@@ -14,8 +14,8 @@ import numpy as np
 def main():
 
   # Parameters
-  read_dir = '/Users/cjwhite/codes/athena/vis/python'
-  input_file = '/Users/cjwhite/research/athena_method/data/opt/kh_opt_hlle.prim.00001.athdf'
+  read_dir = '/Users/chwhite/codes/athena/vis/python'
+  input_file = '/Users/chwhite/research/archived/athena_method/data/opt/kh_opt_hlle.prim.00001.athdf'
   output_file = 'data/kh.npz'
 
   # Load data reader

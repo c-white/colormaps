@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for extracting and saving ray tracing data.
@@ -9,14 +9,13 @@ import sys
 import warnings
 
 # Other modules
-import healpy
 import numpy as np
 
 # Main function
 def main():
 
   # Parameters
-  input_file = '/Users/cjwhite/research/notes/art/data/rays/rays_{0}{1}_40.dat'
+  input_file = '/Users/chwhite/research/notes/art/data/rays/rays_{0}{1}_40.dat'
   output_file = 'data/ray.npz'
   input_format = np.float64
   output_format = np.float32

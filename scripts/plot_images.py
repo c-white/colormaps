@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for plotting all images with all colormaps.
@@ -145,12 +145,12 @@ def main(**kwargs):
         xf = data['complex']['xf']
         yf = data['complex']['yf']
         vals = np.abs(data['complex']['f'])
-        ax.pcolormesh(xf, yf, vals, vmin=1.0e-4, vmax=1.0e4, norm=LogNorm(), cmap=colormap)
+        ax.pcolormesh(xf, yf, vals, norm=LogNorm(vmin=1.0e-4,vmax=1.0e4), cmap=colormap)
       if dataset == 'kh_bb_ratio':
         xf = data['kh']['xf']
         yf = data['kh']['yf']
         vals = data['kh']['bb_ratio']
-        ax.pcolormesh(xf, yf, vals, vmin=1.0e-2, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
+        ax.pcolormesh(xf, yf, vals, norm=LogNorm(vmin=1.0e-2,vmax=1.0e0), cmap=colormap)
       if dataset == 'kh_rho':
         xf = data['kh']['xf']
         yf = data['kh']['yf']
@@ -165,7 +165,7 @@ def main(**kwargs):
         xf = data['torus_j']['xf']
         yf = data['torus_j']['yf']
         vals = data['torus_j']['j_fluid']
-        ax.pcolormesh(xf, yf, vals, vmin=1.0e-3, vmax=1.0e3, norm=LogNorm(), cmap=colormap)
+        ax.pcolormesh(xf, yf, vals, norm=LogNorm(vmin=1.0e-3,vmax=1.0e3), cmap=colormap)
         spin = data['torus_j']['spin']
         r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
         black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')
@@ -174,7 +174,7 @@ def main(**kwargs):
         xf = data['torus_rho']['xf']
         yf = data['torus_rho']['yf']
         vals = data['torus_rho']['rho']
-        ax.pcolormesh(xf, yf, vals, vmin=1.0e-6, vmax=1.0e0, norm=LogNorm(), cmap=colormap)
+        ax.pcolormesh(xf, yf, vals, norm=LogNorm(vmin=1.0e-6,vmax=1.0e0), cmap=colormap)
         spin = data['torus_rho']['spin']
         r_hor = 1.0 + (1.0**2 - spin**2) ** 0.5
         black_hole = plt.Circle((0.0, 0.0), r_hor, color='k')

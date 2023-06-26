@@ -24,7 +24,7 @@ def gray_uniform(name='gray_uniform', num_points=1024, colorspace='CAM02UCS'):
 
   # Calculate RGB colors
   with warnings.catch_warnings():
-    warnings.filterwarnings('ignore', 'invalid value encountered in true_divide', RuntimeWarning)
+    warnings.filterwarnings('ignore', 'invalid value encountered in divide', RuntimeWarning)
     if colorspace in ('CAM02UCS', 'CAM02LCD', 'CAM02SCD'):
       jjp = 100.0 * x
       ap = np.zeros_like(x)
@@ -174,7 +174,8 @@ def inferno_k(name='inferno_k', **kwargs):
   end_jjmmh = (end_jj, end_mm, end_h)
 
   # Create colormap
-  return custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+  xxx = custom_colormap_functions.helix_uniform(start_jjmmh, end_jjmmh, winding_num, name=name, **kwargs)
+  return xxx
 
 # Perceptually uniform monotonic colormap based on inferno and including white
 def inferno_w(name='inferno_w', **kwargs):

@@ -53,8 +53,7 @@ def linear_segment(anchors, samples_below_jjab, samples_above_jjab, name='linear
 
   # Convert values to RGB
   with warnings.catch_warnings():
-    warnings.filterwarnings('ignore', 'divide by zero encountered in true_divide', RuntimeWarning)
-    warnings.filterwarnings('ignore', 'invalid value encountered in true_divide', RuntimeWarning)
+    warnings.filterwarnings('ignore', 'divide by zero encountered in divide', RuntimeWarning)
     below_rgb1 = cs.cspace_convert(below_jjab, cs.CAM02UCS, 'sRGB1')
     above_rgb1 = cs.cspace_convert(above_jjab, cs.CAM02UCS, 'sRGB1')
 
@@ -77,7 +76,7 @@ def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num
   # Parameters
   c1 = 0.007
   c2 = 0.0228
-  hr_max_dev = np.pi / 4.0
+  hr_max_dev = np.pi/4.0
   end_frac = 0.05
 
   # Prepare abscissas
@@ -135,7 +134,7 @@ def helix_uniform(start_jjmmh, end_jjmmh, winding_num, name='helix_uniform', num
   bp = mmp * np.sin(hr)
   jjab = np.hstack((jjp[:,None], ap[:,None], bp[:,None]))
   with warnings.catch_warnings():
-    warnings.filterwarnings('ignore', 'divide by zero encountered in true_divide', RuntimeWarning)
+    warnings.filterwarnings('ignore', 'divide by zero encountered in divide', RuntimeWarning)
     rgb1 = cs.cspace_convert(jjab, cs.CAM02UCS, 'sRGB1')
 
   # Clip colors

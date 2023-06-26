@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for extracting and saving Planck CMB data.
@@ -37,7 +37,7 @@ def main():
   lat = np.arcsin((2.0 * psi + np.sin(2.0 * psi)) / np.pi)
   lon = np.pi + np.pi * x / (2.0**1.5 * np.cos(psi))
   lon = np.where(abs(lon - np.pi) > np.pi, np.nan, lon)
-  th = np.pi / 2.0 - lat
+  th = np.pi/2.0 - lat
   ph = np.pi - lon
   with warnings.catch_warnings():
     warnings.filterwarnings('ignore', 'invalid value encountered in less', RuntimeWarning)

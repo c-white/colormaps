@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Script for extracting and saving density data from GR torus simulation.
@@ -14,8 +14,8 @@ import numpy as np
 def main():
 
   # Parameters
-  read_dir = '/Users/cjwhite/codes/athena/vis/python'
-  input_file = '/Users/cjwhite/research/athena_method/data/torus/s90_t00_high.prim.01000.athdf'
+  read_dir = '/Users/chwhite/codes/athena/vis/python'
+  input_file = '/Users/chwhite/research/archived/athena_method/data/torus/s90_t00_high.prim.01000.athdf'
   output_file = 'data/torus_rho.npz'
   spin = 0.9
 
@@ -29,11 +29,11 @@ def main():
   thf = data_coord['x2f']
   nph = len(data_coord['x3v'])
   dph = 2.0 * np.pi / nph
-  ph_min = 1.0 / 3.0 * dph
-  ph_max = 2.0 / 3.0 * dph
+  ph_min = 1.0/3.0 * dph
+  ph_max = 2.0/3.0 * dph
   data_right = athena_read.athdf(input_file, quantities=('rho',), x3_min=ph_min, x3_max=ph_max)
-  ph_min = np.pi + 1.0 / 3.0 * dph
-  ph_max = np.pi + 2.0 / 3.0 * dph
+  ph_min = np.pi + 1.0/3.0 * dph
+  ph_max = np.pi + 2.0/3.0 * dph
   data_left = athena_read.athdf(input_file, quantities=('rho',), x3_min=ph_min, x3_max=ph_max)
 
   # Calculate grids
