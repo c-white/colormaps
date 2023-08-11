@@ -8,6 +8,7 @@ Script for making chromaticity diagrams.
 import numpy as np
 
 # Plotting modules
+import colorspacious as cs
 import matplotlib
 matplotlib.use('agg')
 matplotlib.rc('font', size=8, family='serif')
@@ -23,7 +24,7 @@ def main():
 
   # Parameters
   filename = 'plots/chromaticity.{0}.png'
-  names = ('xy',)
+  names = ('xy', 'viridis', 'inferno', 'magma', 'plasma')
   c_cgs = 2.99792458e10;
   h_cgs = 6.62607015e-27;
   kb_cgs = 1.380649e-16;
@@ -48,6 +49,42 @@ def main():
   axes['xy']['y_labelpad'] = 3.0
   axes['xy']['y_lim'] = (-0.05, 1.05)
   axes['xy']['y_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['viridis'] = {}
+  axes['viridis']['x_label'] = '$x$'
+  axes['viridis']['x_labelpad'] = -1.0
+  axes['viridis']['x_lim'] = (-0.05, 1.05)
+  axes['viridis']['x_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['viridis']['y_label'] = '$y$'
+  axes['viridis']['y_labelpad'] = 3.0
+  axes['viridis']['y_lim'] = (-0.05, 1.05)
+  axes['viridis']['y_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['inferno'] = {}
+  axes['inferno']['x_label'] = '$x$'
+  axes['inferno']['x_labelpad'] = -1.0
+  axes['inferno']['x_lim'] = (-0.05, 1.05)
+  axes['inferno']['x_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['inferno']['y_label'] = '$y$'
+  axes['inferno']['y_labelpad'] = 3.0
+  axes['inferno']['y_lim'] = (-0.05, 1.05)
+  axes['inferno']['y_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['magma'] = {}
+  axes['magma']['x_label'] = '$x$'
+  axes['magma']['x_labelpad'] = -1.0
+  axes['magma']['x_lim'] = (-0.05, 1.05)
+  axes['magma']['x_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['magma']['y_label'] = '$y$'
+  axes['magma']['y_labelpad'] = 3.0
+  axes['magma']['y_lim'] = (-0.05, 1.05)
+  axes['magma']['y_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['plasma'] = {}
+  axes['plasma']['x_label'] = '$x$'
+  axes['plasma']['x_labelpad'] = -1.0
+  axes['plasma']['x_lim'] = (-0.05, 1.05)
+  axes['plasma']['x_tick_locs'] = np.linspace(0.0, 1.0, 6)
+  axes['plasma']['y_label'] = '$y$'
+  axes['plasma']['y_labelpad'] = 3.0
+  axes['plasma']['y_lim'] = (-0.05, 1.05)
+  axes['plasma']['y_tick_locs'] = np.linspace(0.0, 1.0, 6)
 
   # Plotting parameters - shading
   shade_facecolor = (1.0/3.0, 1.0/3.0, 1.0/3.0)
@@ -71,6 +108,9 @@ def main():
   blackbody_markersize = 3.0
   blackbody_sample_color = 'k'
   blackbody_edgecolors = 'none'
+  cmap_linestyle = '-'
+  cmap_linewidth = 0.5
+  cmap_color = 'k'
   ee_marker = 'o'
   ee_markersize = 3.0
   ee_color = 'k'
@@ -116,6 +156,24 @@ def main():
   blackbody_x = blackbody_xxyyzz[:,0] / np.sum(blackbody_xxyyzz, axis=1)
   blackbody_y = blackbody_xxyyzz[:,1] / np.sum(blackbody_xxyyzz, axis=1)
   blackbody_sample_inds = np.array((15, 40, 90, 190, 291))
+
+  # Calculate colormap loci
+  viridis_rgb = plt.get_cmap('viridis')(np.linspace(0.0, 1.0, 256))[:,:3]
+  viridis_xyyy = cs.cspace_convert(viridis_rgb, 'sRGB255', 'xyY1')
+  viridis_x = viridis_xyyy[:,0]
+  viridis_y = viridis_xyyy[:,1]
+  inferno_rgb = plt.get_cmap('inferno')(np.linspace(0.0, 1.0, 256))[:,:3]
+  inferno_xyyy = cs.cspace_convert(inferno_rgb, 'sRGB255', 'xyY1')
+  inferno_x = inferno_xyyy[:,0]
+  inferno_y = inferno_xyyy[:,1]
+  magma_rgb = plt.get_cmap('magma')(np.linspace(0.0, 1.0, 256))[:,:3]
+  magma_xyyy = cs.cspace_convert(magma_rgb, 'sRGB255', 'xyY1')
+  magma_x = magma_xyyy[:,0]
+  magma_y = magma_xyyy[:,1]
+  plasma_rgb = plt.get_cmap('plasma')(np.linspace(0.0, 1.0, 256))[:,:3]
+  plasma_xyyy = cs.cspace_convert(plasma_rgb, 'sRGB255', 'xyY1')
+  plasma_x = plasma_xyyy[:,0]
+  plasma_y = plasma_xyyy[:,1]
 
   # Calculate illuminant E
   ee_x = 1.0/3.0
@@ -196,7 +254,7 @@ def main():
     ax = plt.subplot(1, 1, 1)
 
     # Shade inaccessible regions
-    if name == 'xy':
+    if name in ('xy', 'viridis', 'inferno', 'magma', 'plasma'):
       x = (axes[name]['x_lim'][0], 0.0)
       y1 = (axes[name]['y_lim'][0], axes[name]['y_lim'][0])
       y2 = (axes[name]['y_lim'][1], axes[name]['y_lim'][1])
@@ -211,12 +269,13 @@ def main():
       ax.fill_between(x, y1, y2, edgecolor=shade_edgecolor, facecolor=shade_facecolor)
 
     # Plot monochromatic locus
-    if name == 'xy':
+    if name in ('xy', 'viridis', 'inferno', 'magma', 'plasma'):
       ax.plot(mono_x, mono_y, linestyle=mono_linestyle, linewidth=mono_linewidth, color=mono_color)
+    if name == 'xy':
       ax.scatter(mono_x[mono_sample_inds], mono_y[mono_sample_inds], s=mono_markersize, c=mono_sample_color, marker=mono_marker, edgecolors=mono_edgecolors)
 
     # Plot line of purples
-    if name == 'xy':
+    if name in ('xy', 'viridis', 'inferno', 'magma', 'plasma'):
       x = (mono_x[0], mono_x[-1])
       y = (mono_y[0], mono_y[-1])
       ax.plot(x, y, linestyle=purple_linestyle, linewidth=purple_linewidth, color=purple_color)
@@ -225,6 +284,16 @@ def main():
     if name == 'xy':
       ax.plot(blackbody_x, blackbody_y, linestyle=blackbody_linestyle, linewidth=blackbody_linewidth, color=blackbody_color)
       ax.scatter(blackbody_x[blackbody_sample_inds], blackbody_y[blackbody_sample_inds], s=blackbody_markersize, c=blackbody_sample_color, marker=blackbody_marker, edgecolors=blackbody_edgecolors)
+
+    # Plot colormap loci
+    if name == 'viridis':
+      ax.plot(viridis_x, viridis_y, linestyle=cmap_linestyle, linewidth=cmap_linewidth, color=cmap_color)
+    if name == 'inferno':
+      ax.plot(inferno_x, inferno_y, linestyle=cmap_linestyle, linewidth=cmap_linewidth, color=cmap_color)
+    if name == 'magma':
+      ax.plot(magma_x, magma_y, linestyle=cmap_linestyle, linewidth=cmap_linewidth, color=cmap_color)
+    if name == 'plasma':
+      ax.plot(plasma_x, plasma_y, linestyle=cmap_linestyle, linewidth=cmap_linewidth, color=cmap_color)
 
     # Plot illuminant E
     if name == 'xy':
@@ -235,13 +304,13 @@ def main():
       ax.scatter(d65_x, d65_y, s=d65_markersize, c=d65_color, marker=d65_marker, edgecolors=d65_edgecolors)
 
     # Plot RGB triangle
-    if name == 'xy':
+    if name in ('xy', 'viridis', 'inferno', 'magma', 'plasma'):
       x = (red_x, green_x, blue_x, red_x)
       y = (red_y, green_y, blue_y, red_y)
       ax.plot(x, y, linestyle=rgb_linestyle, linewidth=rgb_linewidth, color=rgb_color)
 
     # Plot RGB gamut
-    if name == 'xy':
+    if name in ('xy', 'viridis', 'inferno', 'magma', 'plasma'):
       ax.imshow(gamut_rgb, interpolation=gamut_interpolation, origin=gamut_origin, extent=gamut_extent)
 
     # Adjust axes
